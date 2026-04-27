@@ -1,0 +1,265 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg: #0a0e1a;
+  --sea: #0d2137;
+  --panel: #111827;
+  --border: #1e3a5f;
+  --text: #e2e8f0;
+  --muted: #64748b;
+  --accent: #f59e0b;
+  --health-color: #22c55e;
+  --shield-color: #60a5fa;
+  --bar-bg: #1e293b;
+}
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-size: 14px;
+  overflow: hidden;
+}
+
+/* ── Layout ── */
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+}
+
+#battle-scene {
+  flex: 0 0 33.333%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: var(--sea);
+  border-bottom: 2px solid var(--border);
+  gap: 8px;
+  overflow: hidden;
+}
+
+#dice-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.dice-zone {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6px 10px;
+  gap: 6px;
+  min-height: 0;
+  overflow: hidden;
+}
+
+#enemy-zone {
+  border-bottom: 1px solid var(--border);
+  padding-top: 10px;
+}
+
+#player-zone {
+  padding-bottom: 10px;
+}
+
+/* ── Canvas wrap ── */
+.canvas-wrap {
+  position: relative;
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.canvas-wrap canvas { display: none; }
+
+/* ── Dice overlay ── */
+.dice-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* ── Ship panels ── */
+.ship-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.ship-name {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.ship-visual {
+  font-size: clamp(28px, 6vw, 52px);
+  line-height: 1;
+  text-align: center;
+}
+
+#ai-ship .ship-visual { transform: scaleX(-1); }
+
+.bar-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+}
+
+.bar-track {
+  flex: 1;
+  height: 8px;
+  background: var(--bar-bg);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.health-fill {
+  height: 100%;
+  background: var(--health-color);
+  border-radius: 4px;
+  transition: width 0.4s ease;
+}
+
+.shield-fill {
+  height: 100%;
+  background: var(--shield-color);
+  border-radius: 4px;
+  transition: width 0.4s ease;
+}
+
+.bar-label { color: var(--muted); min-width: 14px; }
+.health-val, .shield-val { min-width: 28px; font-size: 11px; color: var(--muted); }
+
+.fire-badge {
+  font-size: 11px;
+  background: #7f1d1d;
+  color: #fca5a5;
+  padding: 1px 5px;
+  border-radius: 4px;
+  display: none;
+}
+
+/* ── VS divider ── */
+#vs {
+  font-size: clamp(18px, 4vw, 28px);
+  font-weight: 900;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+/* ── Turn flash label ── */
+#turn-flash {
+  position: relative;
+  z-index: 10;
+  height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  overflow: visible;
+  opacity: 0;
+  font-size: clamp(16px, 4vw, 22px);
+  font-weight: 800;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-shadow: 0 0 20px #f59e0b88;
+  white-space: nowrap;
+}
+
+/* ── Dice rows ── */
+.dice-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.die {
+  flex: 1;
+  min-width: 44px;
+  max-width: 80px;
+  background: var(--panel);
+  border: 2px solid #555;
+  border-radius: 8px;
+  padding: 5px 3px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.die-icon { font-size: clamp(16px, 3.5vw, 22px); line-height: 1; }
+.die-label { font-size: 9px; color: var(--muted); text-align: center; line-height: 1.2; }
+
+/* ── Roll button ── */
+#roll-btn {
+  padding: 10px 40px;
+  font-size: 15px;
+  font-weight: 700;
+  background: var(--accent);
+  color: #0a0e1a;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  letter-spacing: 0.05em;
+  transition: opacity 0.2s, transform 0.1s;
+  margin-top: 6px;
+}
+
+#roll-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+#roll-btn:not(:disabled):active { transform: scale(0.96); }
+
+
+/* ── Game Over overlay ── */
+#gameover-overlay {
+  position: fixed;
+  inset: 0;
+  background: #000000cc;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  z-index: 100;
+}
+
+.gameover-title {
+  font-size: clamp(28px, 8vw, 48px);
+  font-weight: 900;
+  color: var(--accent);
+}
+
+#restart-btn {
+  padding: 10px 28px;
+  font-size: 15px;
+  font-weight: 700;
+  background: var(--accent);
+  color: #0a0e1a;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+
