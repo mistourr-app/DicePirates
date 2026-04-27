@@ -151,5 +151,5 @@ function init() {
 document.addEventListener('DOMContentLoaded', init);
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/service-worker.js');
+  navigator.serviceWorker.register('/DicePirates/service-worker.js');
 }
